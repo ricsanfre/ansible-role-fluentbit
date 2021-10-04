@@ -1,0 +1,22 @@
+---
+# Install fluentbit
+
+- name: Install | Add td-agent-bit apt-key
+  apt_key:
+    url: "{{ fluentbit_gpg_key }}"
+    state: present
+
+- name: Install | Add td-agent-bit repository
+  apt_repository:
+    repo: '{{ fluentbit_apt_repo }}'
+    state: present
+    filename: td-agent-bit
+    update_cache: true
+
+- name: Install | Install fluentbit package
+  package:
+    name: "{{ fluentbit_pkg }}"
+    state: present
+    update_cache: true
+  notify: Restart Fluentbit service
+  tags: ['install']
