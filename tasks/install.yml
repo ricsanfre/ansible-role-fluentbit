@@ -1,6 +1,19 @@
 ---
 # Install fluentbit
 
+- name: Install | Install packages to allow HTTPS installation
+  apt:
+    name: "{{ packages }}"
+    update_cache: true
+    state: present
+  vars:
+    packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+
 - name: Install | Add td-agent-bit apt-key
   apt_key:
     url: "{{ fluentbit_gpg_key }}"
@@ -10,7 +23,7 @@
   apt_repository:
     repo: '{{ fluentbit_apt_repo }}'
     state: present
-    filename: td-agent-bit
+    # filename: td-agent-bit
     update_cache: true
 
 - name: Install | Install fluentbit package
