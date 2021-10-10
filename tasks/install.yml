@@ -8,8 +8,8 @@
     state: present
   vars:
     packages:
-      - apt-transport-https
       - ca-certificates
+      - apt-transport-https
       - curl
       - gnupg
       - lsb-release
@@ -23,7 +23,7 @@
   apt_repository:
     repo: '{{ fluentbit_apt_repo }}'
     state: present
-    # filename: td-agent-bit
+    filename: td-agent-bit
     update_cache: true
 
 - name: Install | Install fluentbit package

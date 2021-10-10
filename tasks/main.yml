@@ -6,5 +6,5 @@
   tags: ['install']
 
 # Configure fluentbit
-# - import_tasks: configure.yml
-#   tags: ['configure']
+- import_tasks: configure.yml
+  tags: ['configure']
