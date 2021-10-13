@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: ricsanfre.fluentbit
+      fluentbit_service_enable_metrics: true
+      # Default inputs
+      fluentbit_inputs:
+        - {"Name": "Auth",
+           "Tag": "auth",
+           "Path": "/var/log/auth.log", 
+           "Path_Key": "log_file", 
+           "DB": "/run/fluent-bit-auth.state",
+           "Parser": "syslog-rfc3164" }
+        
+      # Default outputs
+      fluentbit_outputs:
+        - {"Name": "stdout", "Match": "*"}
