@@ -88,6 +88,13 @@
 {% endfor %}
 {% endfor %}
 
+{% for input in fluentbit_filters %}
+[FILTER]
+{% for key in input %}
+    {{ key }} {{ input[key] }}
+{% endfor %}
+{% endfor %}
+
 {% for input in fluentbit_outputs %}
 [OUTPUT]
 {% for key in input %}

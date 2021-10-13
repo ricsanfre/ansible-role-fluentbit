@@ -14,6 +14,9 @@ fluentbit_service_metrics_listen_port: 2020
 # Default inputs
 fluentbit_inputs: []
 
+# Default filters
+fluentbit_filters: []
+
 # Default outputs
 fluentbit_outputs: []
 
