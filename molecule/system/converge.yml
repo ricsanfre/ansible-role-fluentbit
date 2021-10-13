@@ -9,13 +9,19 @@
       fluentbit_service_enable_metrics: true
       # Default inputs
       fluentbit_inputs:
-        - {"Name": "Auth",
-           "Tag": "auth",
-           "Path": "/var/log/auth.log", 
-           "Path_Key": "log_file", 
-           "DB": "/run/fluent-bit-auth.state",
-           "Parser": "syslog-rfc3164" }
-        
+        - name: tail
+          tag: auth
+          path: /var/log/auth.log
+          path_key: log_file
+          DB: /run/fluent-bit-auth.state
+          Parser: syslog-rfc3164
+        - name: tail
+          tag: syslog
+          path: /var/log/syslog
+          path_key: log_file
+          DB: /run/fluent-bit-syslog.state
+          Parser: syslog-rfc3164
       # Default outputs
       fluentbit_outputs:
-        - {"Name": "stdout", "Match": "*"}
+        - name: stdout
+          match: "*"
