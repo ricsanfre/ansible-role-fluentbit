@@ -7,6 +7,7 @@
     dest: /etc/td-agent-bit/td-agent-bit.conf
     mode: 0644
     backup: "{{ fluentbit_backup_conf }}"
+    validate: "/opt/td-agent-bit/bin/td-agent-bit -c %s --dry-run"
   notify: Restart Fluentbit service
 
 - name: Ensure fluentbit service is enabled and started
