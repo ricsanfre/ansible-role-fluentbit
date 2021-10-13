@@ -1,24 +1,24 @@
 ---
-
-
-fluentbit_service_flush_seconds: 5
-fluentbit_service_daemon: false
-
+# fluentbit service name
 fluentbit_service_name: td-agent-bit
 
+# Backup configuration
+fluentbit_backup_conf: true
+
+# [SERVICE] fluentbit configuration variable
+fluentbit_service_flush_seconds: 5
+fluentbit_service_daemon: false
 fluentbit_service_log_level: info
+
 fluentbit_service_enable_metrics: false
 fluentbit_service_metrics_listen_ip: 0.0.0.0
 fluentbit_service_metrics_listen_port: 2020
 
-# Default inputs
+# [INPUT] fluentbit configuration. Dictionary list
 fluentbit_inputs: []
 
-# Default filters
+# [FILTER] fluentbit configuration. Dictionary list
 fluentbit_filters: []
 
-# Default outputs
+# [OUTPUT] fluentbit configuration. Dictionary list
 fluentbit_outputs: []
-
-# Backup configuration
-fluentbit_backup_conf: true
