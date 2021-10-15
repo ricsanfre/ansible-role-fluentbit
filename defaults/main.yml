@@ -9,6 +9,7 @@ fluentbit_backup_conf: true
 fluentbit_service_flush_seconds: 5
 fluentbit_service_daemon: false
 fluentbit_service_log_level: info
+fluentbit_service_log_file: /var/log/fluentbit.log
 
 fluentbit_service_enable_metrics: false
 fluentbit_service_metrics_listen_ip: 0.0.0.0

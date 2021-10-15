@@ -22,6 +22,10 @@
     # by default 'info' is set, that means it includes 'error' and 'warning'.
     log_level    {{ fluentbit_service_log_level }}
 
+{% if fluentbit_service_log_file | length > 0 %}
+    log_file  {{ fluentbit_service_log_file }}
+{% endif %}
+
     # Parsers File
     # ============
     # specify an optional 'Parsers' configuration file
