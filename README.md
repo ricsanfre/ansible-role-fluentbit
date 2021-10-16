@@ -73,6 +73,23 @@ is translated into:
 
 ```
 
+### Parsers configuration
+
+Default package td-agent-bit installation comes with a predefined set of parsers included as part of `parser.conf` file.
+Additional custom parsers can be added to this configuration file using the variable `fluentbit_custom_parsers`
+
+```yml
+fluentbit_custom_parsers:
+  - Name: syslog-rfc3164-nopri
+    Format: regex
+    Regex: /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
+    Time_Key: time
+    Time_Format: "%b %d %H:%M:%S"
+    Time_Keep: true
+```
+Each dictionary in this list is used to define one `[PARSER]` section within `parsers.conf` file 
+
+
 Dependencies
 ------------
 

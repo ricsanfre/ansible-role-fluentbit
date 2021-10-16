@@ -23,3 +23,6 @@ fluentbit_filters: []
 
 # [OUTPUT] fluentbit configuration. Dictionary list
 fluentbit_outputs: []
+
+# Additional custom parsers. Dictionary list
+fluentbit_custom_parsers: []

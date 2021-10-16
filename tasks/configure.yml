@@ -10,6 +10,14 @@
     validate: "/opt/td-agent-bit/bin/td-agent-bit -c %s --dry-run"
   notify: Restart Fluentbit service
 
+- name: Configure | Source td-agent-bit parsers conf
+  template:
+    src: parsers.conf.j2
+    dest: /etc/td-agent-bit/parsers.conf
+    mode: 0644
+    backup: "{{ fluentbit_backup_conf }}"
+  notify: Restart Fluentbit service
+
 - name: Ensure fluentbit service is enabled and started
   service:
     name: "{{ fluentbit_service_name }}"
