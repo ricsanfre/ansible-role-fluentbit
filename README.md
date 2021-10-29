@@ -90,6 +90,45 @@ fluentbit_custom_parsers:
 Each dictionary in this list is used to define one `[PARSER]` section within `parsers.conf` file 
 
 
+### Lua filters and lua script support
+
+Lua Filter allows you to modify the incoming records using custom Lua Scripts. See fluentbit [documentation](https://docs.fluentbit.io/manual/pipeline/filters/lua)
+
+Lua filter can be configured using `fluentbit_filters` variable
+
+```yml
+fluentbit_filters:
+  - name: lua
+    match: "*"
+    script: /etc/td-agent-bit/adjust_ts.lua
+    call: local_timestamp_to_UTC
+```
+Lua scripts used by the filters need to be configured using `fluentbit_lua_scripts` role variable. This variable is a list of dictionaries with 2 fields:
+- `name`: name of the lua script
+- `content`: script content)
+
+Script content can be populated from a file using ansible [`lookup` plugin](https://docs.ansible.com/ansible/latest/plugins/lookup.html).
+
+```yml
+fluentbit_lua_scripts:
+  - name: adjust_ts.lua
+    content: "{{ lookup('template','templates/adjust_ts.lua') }}"
+
+```
+and `templates/adjust_ts.lua` file content:
+
+```lua
+function local_timestamp_to_UTC(tag, timestamp, record)
+    local utcdate   = os.date("!*t", ts)
+    local localdate = os.date("*t", ts)
+    localdate.isdst = false -- this is the trick
+    utc_time_diff = os.difftime(os.time(localdate), os.time(utcdate))
+    return 1, timestamp - utc_time_diff, record
+end
+```
+
+> NOTE: all lua scripts will be copied to `/etc/td-agent-bit` directory
+
 Dependencies
 ------------
 
@@ -107,7 +146,19 @@ Example Playbooks
   roles:
     - role: ricsanfre.fluentbit
       fluentbit_service_enable_metrics: true
-      # Default inputs
+      # parsers
+      fluentbit_custom_parsers:
+        - Name: syslog-rfc3164-nopri
+          Format: regex
+          Regex: /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
+          Time_Key: time
+          Time_Format: "%b %d %H:%M:%S"
+          Time_Keep: true
+      # lua scripts
+      fluentbit_lua_scripts:
+        - name: adjust_ts.lua
+          content: "{{ lookup('template','templates/adjust_ts.lua') }}"
+      # inputs
       fluentbit_inputs:
         - name: tail
           tag: auth
@@ -121,7 +172,13 @@ Example Playbooks
           path_key: log_file 
           DB: /run/fluent-bit-syslog.state
           Parser: syslog-rfc3164
-      # Default outputs
+      # filters
+      fluentbit_filters:
+        - name: lua
+          match: "*"
+          script: /etc/td-agent-bit/adjust_ts.lua
+          call: local_timestamp_to_UTC
+      # outputs
       fluentbit_outputs:
         - name: stdout
           match: "*"

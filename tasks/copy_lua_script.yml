@@ -1,0 +1,14 @@
+---
+
+- name: test lua_script
+  ansible.builtin.assert:
+    that:
+      - lua_script.name is defined
+    quiet: true
+
+- name: copy lua script
+  copy:
+    dest: "/etc/td-agent-bit/{{ lua_script.name }}"
+    content: "{{ lua_script.content }}"
+    mode: 0644
+  notify: Restart Fluentbit service

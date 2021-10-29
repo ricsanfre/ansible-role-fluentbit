@@ -26,3 +26,9 @@ fluentbit_outputs: []
 
 # Additional custom parsers. Dictionary list
 fluentbit_custom_parsers: []
+
+# Lua scripts. List
+fluentbit_lua_scripts: []
+# fluentbit_lua_scritps:
+#   - filename: /dev/sdb
+#     content: <script_content>

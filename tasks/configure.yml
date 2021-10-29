@@ -1,6 +1,15 @@
 ---
 # Configure fluentbit
 
+- name: Configure | Copy Lua scripts
+  include_tasks:
+    file: copy_lua_script.yml
+  loop: "{{ fluentbit_lua_scripts }}"
+  loop_control:
+    loop_var: lua_script
+  when:
+    - fluentbit_lua_scripts is defined
+
 - name: Configure | Source td-agent-bit parsers conf
   template:
     src: parsers.conf.j2
