@@ -1,10 +1,5 @@
 # custom_parsers.conf
 
-{% if fluentbit_custom_parsers != [] %}
-{% for parser in fluentbit_custom_parsers %}
-[PARSER]
-{% for key,value in parser.items() %}
-    {{ key }} {{ value }}
-{% endfor %}
-{% endfor %}
+{% if fluentbit_custom_parsers | length > 0 %}
+{{ fluentbit_custom_parsers }}
 {% endif %}

@@ -8,8 +8,13 @@
     - role: ricsanfre.fluentbit
       fluentbit_service_enable_metrics: true
       # Default inputs
-      fluentbit_inputs:
-        - {"Name": "dummy", "Tag": "dummy.log"}
+      fluentbit_inputs: |
+        [INPUT]
+            Name dummy
+            Tag dummy.log
+
       # Default outputs
-      fluentbit_outputs:
-        - {"Name": "stdout", "Match": "*"}
+      fluentbit_outputs: |
+        [OUTPUT]
+            Name stdout
+            Match *

@@ -30,48 +30,31 @@ You can find more information about each option in the Fluentbit [documentation]
 
 For configuring INPUT, FILTER and OUTPUT section within fluentbit configuration the following variables are used 
 
-* **fluentbit_inputs** : Fluentbit INPUT configuration. List of dictionaries defining log inputs  [default: {}].
-* **fluentbit_filters** : Fluentbit FILTER configuration. List of dictionaries defining log filters[default : {}].
-* **fluentbit_outputs** : Fluentbit OUTPUT configuration. List of dictionaries defining log outputs [default : {}].
+* **fluentbit_inputs**: Fluentbit INPUT configuration section [default: ""].
+* **fluentbit_filters**: Fluentbit FILTER configuration section [default: ""].
+* **fluentbit_outputs**: Fluentbit OUTPUT configuration section [default: ""].
 
-Each dictionary within each list is used to define one `[INPUT]`, `[FILTER]` or `[OUTPUT]` section in fluentbit configuration file. Each configuration section is configured with key/values couples, so the dictionary's keys are used as configuration keys and dictionary's value as values.
 
-For example:
+Using that variables the config file content can be added using using yaml `|` operator
 
 ```yml
-fluentbit_inputs:
-  - name: tail
-    tag: auth
-    path: "/var/log/auth.log" 
-    path_key: log_file 
-    DB: "/run/fluent-bit-auth.state"
-    Parser: syslog-rfc3164
-  - name: tail
-    tag: syslog
-    path: /var/log/syslog 
-    path_key: log_file 
-    DB: /run/fluent-bit-syslog.state
-    Parser: syslog-rfc3164
+fluentbit_inputs: |
+  [INPUT]
+      name tail
+      tag auth
+      path /var/log/auth.log
+      path_key log_file
+      DB /run/fluent-bit-auth.state
+      Parser syslog-rfc3164
+  [INPUT]
+      name tail
+      tag syslog
+      path /var/log/syslog
+      path_key log_file
+      DB /run/fluent-bit-syslog.state
+      Parser syslog-rfc3164
 ```
-is translated into:
 
-```
-[INPUT]
-    name tail
-    tag auth
-    path /var/log/auth.log
-    path_key log_file
-    DB /run/fluent-bit-auth.state
-    Parser syslog-rfc3164
-[INPUT]
-    name tail
-    tag syslog
-    path /var/log/syslog
-    path_key log_file
-    DB /run/fluent-bit-syslog.state
-    Parser syslog-rfc3164
-
-```
 
 ### Parsers configuration
 
@@ -80,29 +63,30 @@ Default package fluent-bit installation comes with a predefined set of parsers i
 Content of this custom parser file can be configured using the variable `fluentbit_custom_parsers`
 
 ```yml
-fluentbit_custom_parsers:
-  - Name: syslog-rfc3164-nopri
-    Format: regex
-    Regex: /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
-    Time_Key: time
-    Time_Format: "%b %d %H:%M:%S"
-    Time_Keep: true
+fluentbit_custom_parsers: |
+  [PARSER]
+      Name syslog-rfc3164-nopri
+      Format regex
+      Regex /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
+      Time_Key time
+      Time_Format %b %d %H:%M:%S
+      Time_Keep False
 ```
-Each dictionary in this list is used to define one `[PARSER]` section within `parsers.conf` file 
 
 
 ### Lua filters and lua script support
 
 Lua Filter allows you to modify the incoming records using custom Lua Scripts. See fluentbit [documentation](https://docs.fluentbit.io/manual/pipeline/filters/lua)
 
-Lua filter can be configured using `fluentbit_filters` variable
+Lua filter can be included in `fluentbit_filters` variable
 
 ```yml
-fluentbit_filters:
-  - name: lua
-    match: "*"
-    script: /etc/fluent-bit/adjust_ts.lua
-    call: local_timestamp_to_UTC
+fluentbit_filters: |
+  [FILTER]
+      Name lua
+      Match host.*
+      script /etc/fluent-bit/adjust_ts.lua
+      call local_timestamp_to_UTC
 ```
 Lua scripts used by the filters need to be configured using `fluentbit_lua_scripts` role variable. This variable is a list of dictionaries with 2 fields:
 - `name`: name of the lua script
@@ -147,40 +131,37 @@ Example Playbooks
   roles:
     - role: ricsanfre.fluentbit
       fluentbit_service_enable_metrics: true
-      # parsers
-      fluentbit_custom_parsers:
-        - Name: syslog-rfc3164-nopri
-          Format: regex
-          Regex: /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
-          Time_Key: time
-          Time_Format: "%b %d %H:%M:%S"
-          Time_Keep: true
       # lua scripts
       fluentbit_lua_scripts:
         - name: adjust_ts.lua
           content: "{{ lookup('template','templates/adjust_ts.lua') }}"
       # inputs
-      fluentbit_inputs:
-        - name: tail
-          tag: auth
-          path: /var/log/auth.log 
-          path_key: log_file 
-          DB: /run/fluent-bit-auth.state
-          Parser: syslog-rfc3164
-        - name: tail
-          tag: syslog
-          path: /var/log/syslog 
-          path_key: log_file 
-          DB: /run/fluent-bit-syslog.state
-          Parser: syslog-rfc3164
+      fluentbit_inputs: |
+        [INPUT]
+            Name tail
+            Tag host.*
+            DB /run/fluentbit-state.db
+            Path /var/log/auth.log,/var/log/syslog
+            Parser syslog-rfc3164-nopri
       # filters
-      fluentbit_filters:
-        - name: lua
-          match: "*"
-          script: /etc/fluent-bit/adjust_ts.lua
-          call: local_timestamp_to_UTC
+      fluentbit_filters: |
+        [FILTER]
+            Name lua
+            Match host.*
+            script /etc/fluent-bit/adjust_ts.lua
+            call local_timestamp_to_UTC
       # outputs
-      fluentbit_outputs:
-        - name: stdout
-          match: "*"
+      fluentbit_outputs: |
+        [OUTPUT]
+            Name stdout
+            Match *
+      # Parsers
+      fluentbit_custom_parsers: |
+        [PARSER]
+            Name syslog-rfc3164-nopri
+            Format regex
+            Regex /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
+            Time_Key time
+            Time_Format %b %d %H:%M:%S
+            Time_Keep False
 ```

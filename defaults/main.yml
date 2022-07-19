@@ -15,19 +15,19 @@ fluentbit_service_enable_metrics: false
 fluentbit_service_metrics_listen_ip: 0.0.0.0
 fluentbit_service_metrics_listen_port: 2020
 
-# [INPUT] fluentbit configuration. Dictionary list
-fluentbit_inputs: []
+# [INPUT] fluentbit configuration.
+fluentbit_inputs: ""
 
-# [FILTER] fluentbit configuration. Dictionary list
-fluentbit_filters: []
+# [FILTER] fluentbit configuration.
+fluentbit_filters: ""
 
-# [OUTPUT] fluentbit configuration. Dictionary list
-fluentbit_outputs: []
+# [OUTPUT] fluentbit configuration.
+fluentbit_outputs: ""
 
-# Additional custom parsers. Dictionary list
-fluentbit_custom_parsers: []
+# Additional custom parsers.
+fluentbit_custom_parsers: ""
 
-# Lua scripts. List
+# Lua scripts. Dictionary List
 fluentbit_lua_scripts: []
 # fluentbit_lua_scritps:
 #   - filename: /dev/sdb

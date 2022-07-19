@@ -86,23 +86,15 @@
     #
     # storage.backlog.mem_limit 5M
 
-{% for input in fluentbit_inputs %}
-[INPUT]
-{% for key in input %}
-    {{ key }} {{ input[key] }}
-{% endfor %}
-{% endfor %}
 
-{% for input in fluentbit_filters %}
-[FILTER]
-{% for key in input %}
-    {{ key }} {{ input[key] }}
-{% endfor %}
-{% endfor %}
+{% if fluentbit_inputs | length > 0 %}
+{{ fluentbit_inputs }}
+{% endif %}
 
-{% for input in fluentbit_outputs %}
-[OUTPUT]
-{% for key in input %}
-    {{ key }} {{ input[key] }}
-{% endfor %}
-{% endfor %}
+{% if fluentbit_outputs | length > 0 %}
+{{ fluentbit_outputs }}
+{% endif %}
+
+{% if fluentbit_filters | length > 0 %}
+{{ fluentbit_filters }}
+{% endif %}

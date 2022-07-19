@@ -11,35 +11,32 @@
       fluentbit_lua_scripts:
         - name: adjust_ts.lua
           content: "{{ lookup('template','templates/adjust_ts.lua') }}"
-      # Default inputs
-      fluentbit_inputs:
-        - name: tail
-          tag: auth
-          path: /var/log/auth.log
-          path_key: log_file
-          DB: /run/fluent-bit-auth.state
-          Parser: syslog-rfc3164
-        - name: tail
-          tag: syslog
-          path: /var/log/syslog
-          path_key: log_file
-          DB: /run/fluent-bit-syslog.state
-          Parser: syslog-rfc3164
-      # Default filter
-      fluentbit_filters:
-        - name: lua
-          match: "*"
-          script: /etc/fluent-bit/adjust_ts.lua
-          call: local_timestamp_to_UTC
-      # Default outputs
-      fluentbit_outputs:
-        - name: stdout
-          match: "*"
+      # inputs
+      fluentbit_inputs: |
+        [INPUT]
+            Name tail
+            Tag host.*
+            DB /run/fluentbit-state.db
+            Path /var/log/auth.log,/var/log/syslog
+            Parser syslog-rfc3164-nopri
+      # filters
+      fluentbit_filters: |
+        [FILTER]
+            Name lua
+            Match host.*
+            script /etc/fluent-bit/adjust_ts.lua
+            call local_timestamp_to_UTC
+      # outputs
+      fluentbit_outputs: |
+        [OUTPUT]
+            Name stdout
+            Match *
       # Parsers
-      fluentbit_custom_parsers:
-        - Name: syslog-rfc3164-nopri
-          Format: regex
-          Regex: /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
-          Time_Key: time
-          Time_Format: "%b %d %H:%M:%S"
-          Time_Keep: true
+      fluentbit_custom_parsers: |
+        [PARSER]
+            Name syslog-rfc3164-nopri
+            Format regex
+            Regex /^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/
+            Time_Key time
+            Time_Format %b %d %H:%M:%S
+            Time_Keep False
