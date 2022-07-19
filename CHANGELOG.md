@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.0.4] - 2022-07-19
+
+- Use official fluent-bit Ubuntu 20.04 package:`fluent-bit` (Fix issue #3)
+- Enabling complex filter definitions with multiple repeated operations (issue #2)
+- Using custom_parsers.conf file instead of overwritting default parsers.conf file.
+
 ## [v1.0.3] - 2021-10-29
 
 - Added lua_scripts support
