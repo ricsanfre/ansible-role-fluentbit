@@ -15,7 +15,7 @@ Role Variables
 
 Available variables are listed below along with default values (see `defaults\main.yaml`)
 
-Default configuration of this role keeps most of default configuration file created by td-agent-bit package installation. It only removes default INPUT (cpu monitoring) and OUTPUT (stdout) sections.
+Default configuration of this role keeps most of default configuration file created by fluent-bit package installation. It only removes default INPUT (cpu monitoring) and OUTPUT (stdout) sections.
 
 You can find more information about each option in the Fluentbit [documentation](https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file).
 
@@ -75,8 +75,9 @@ is translated into:
 
 ### Parsers configuration
 
-Default package td-agent-bit installation comes with a predefined set of parsers included as part of `parser.conf` file.
-Additional custom parsers can be added to this configuration file using the variable `fluentbit_custom_parsers`
+Default package fluent-bit installation comes with a predefined set of parsers included as part of `parsers.conf` file. Additional configuration files containing parsers can be added to fluent-bit configuration. This role uses `custom_parser.conf` file for keeping additional custom parsers.
+
+Content of this custom parser file can be configured using the variable `fluentbit_custom_parsers`
 
 ```yml
 fluentbit_custom_parsers:
@@ -100,7 +101,7 @@ Lua filter can be configured using `fluentbit_filters` variable
 fluentbit_filters:
   - name: lua
     match: "*"
-    script: /etc/td-agent-bit/adjust_ts.lua
+    script: /etc/fluent-bit/adjust_ts.lua
     call: local_timestamp_to_UTC
 ```
 Lua scripts used by the filters need to be configured using `fluentbit_lua_scripts` role variable. This variable is a list of dictionaries with 2 fields:
@@ -127,7 +128,7 @@ function local_timestamp_to_UTC(tag, timestamp, record)
 end
 ```
 
-> NOTE: all lua scripts will be copied to `/etc/td-agent-bit` directory
+> NOTE: all lua scripts will be copied to `/etc/fluent-bit` directory
 
 Dependencies
 ------------
@@ -176,7 +177,7 @@ Example Playbooks
       fluentbit_filters:
         - name: lua
           match: "*"
-          script: /etc/td-agent-bit/adjust_ts.lua
+          script: /etc/fluent-bit/adjust_ts.lua
           call: local_timestamp_to_UTC
       # outputs
       fluentbit_outputs:

@@ -29,7 +29,7 @@
       fluentbit_filters:
         - name: lua
           match: "*"
-          script: /etc/td-agent-bit/adjust_ts.lua
+          script: /etc/fluent-bit/adjust_ts.lua
           call: local_timestamp_to_UTC
       # Default outputs
       fluentbit_outputs:

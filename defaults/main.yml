@@ -1,6 +1,6 @@
 ---
 # fluentbit service name
-fluentbit_service_name: td-agent-bit
+fluentbit_service_name: fluent-bit
 
 # Backup configuration
 fluentbit_backup_conf: true

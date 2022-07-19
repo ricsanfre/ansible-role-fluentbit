@@ -3,7 +3,7 @@
 
 - name: Restart Fluentbit service
   service:
-    name: td-agent-bit
+    name: "{{ fluentbit_service_name }}"
     enabled: true
     state: restarted
   become: true

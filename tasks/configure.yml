@@ -10,21 +10,21 @@
   when:
     - fluentbit_lua_scripts is defined
 
-- name: Configure | Source td-agent-bit parsers conf
+- name: Configure | Source fluent-bit custom parsers conf
   template:
-    src: parsers.conf.j2
-    dest: /etc/td-agent-bit/parsers.conf
+    src: custom_parsers.conf.j2
+    dest: /etc/fluent-bit/custom_parsers.conf
     mode: 0644
     backup: "{{ fluentbit_backup_conf }}"
   notify: Restart Fluentbit service
 
-- name: Configure | Source td-agent-bit main conf
+- name: Configure | Source fluent-bit main conf
   template:
-    src: td-agent-bit.conf.j2
-    dest: /etc/td-agent-bit/td-agent-bit.conf
+    src: fluent-bit.conf.j2
+    dest: /etc/fluent-bit/fluent-bit.conf
     mode: 0644
     backup: "{{ fluentbit_backup_conf }}"
-    validate: "/opt/td-agent-bit/bin/td-agent-bit -c %s --dry-run"
+    validate: "/opt/fluent-bit/bin/fluent-bit -c %s --dry-run"
   notify: Restart Fluentbit service
 
 - name: Ensure fluentbit service is enabled and started

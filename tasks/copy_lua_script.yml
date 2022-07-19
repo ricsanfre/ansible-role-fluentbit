@@ -8,7 +8,7 @@
 
 - name: copy lua script
   copy:
-    dest: "/etc/td-agent-bit/{{ lua_script.name }}"
+    dest: "/etc/fluent-bit/{{ lua_script.name }}"
     content: "{{ lua_script.content }}"
     mode: 0644
   notify: Restart Fluentbit service

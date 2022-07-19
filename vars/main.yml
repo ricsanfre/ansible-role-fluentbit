@@ -4,4 +4,4 @@
 fluentbit_gpg_key: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_apt_repo: "deb https://packages.fluentbit.io/ubuntu/focal focal main"
 
-fluentbit_pkg: td-agent-bit
+fluentbit_pkg: fluent-bit
