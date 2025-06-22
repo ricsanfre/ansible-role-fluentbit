@@ -9,10 +9,7 @@
   vars:
     packages:
       - ca-certificates
-      - apt-transport-https
       - curl
-      - gnupg
-      - lsb-release
 
 - name: Ensure keyrings directory is created
   ansible.builtin.file:
