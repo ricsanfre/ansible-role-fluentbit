@@ -2,7 +2,7 @@
 # Install fluentbit
 
 - name: Install | Install packages to allow HTTPS installation
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     update_cache: true
     state: present
@@ -14,13 +14,23 @@
       - gnupg
       - lsb-release
 
-- name: Install | Add fluent-bit apt-key
-  apt_key:
+- name: Ensure keyrings directory is created
+  ansible.builtin.file:
+    path: "{{ apt_keyrings_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Download Fluentbit GPG key.
+  ansible.builtin.get_url:
     url: "{{ fluentbit_gpg_key }}"
-    state: present
+    dest: "{{ fluentbit_apt_gpg_key }}"
+    mode: '0644'
+    force: true
 
 - name: Install | Add fluent-bit repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: '{{ fluentbit_apt_repo }}'
     state: present
     update_cache: true

@@ -1,7 +1,23 @@
 ---
 # Fluentbit ubuntu package
 
+fluentbit_arch_map:
+  i386: '386'
+  x86_64: 'amd64'
+  aarch64: 'arm64'
+  armv7l: 'arm'
+  armv6l: 'arm6vl'
+
+fluentbit_arch: "{{ fluentbit_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+
+
 fluentbit_gpg_key: "https://packages.fluentbit.io/fluentbit.key"
-fluentbit_apt_repo: "deb https://packages.fluentbit.io/ubuntu/focal focal main"
+
+apt_keyrings_dir: /etc/apt/keyrings
+fluentbit_apt_gpg_key: "{{ apt_keyrings_dir }}/fluentbit.asc"
+
+# fluentbit_apt_repo: "deb https://packages.fluentbit.io/ubuntu/focal focal main"
+fluentbit_repo_url: "https://packages.fluentbit.io"
+fluentbit_apt_repo: "deb [arch={{ fluentbit_arch }} signed-by={{ fluentbit_apt_gpg_key }}] {{ fluentbit_repo_url }}/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }} {{ ansible_distribution_release }} main"
 
 fluentbit_pkg: fluent-bit
