@@ -2,6 +2,9 @@
 # fluentbit service name
 fluentbit_service_name: fluent-bit
 
+# Directory holding fluent-bit configuration and parser/plugin files
+fluentbit_config_dir: /etc/fluent-bit
+
 # Backup configuration
 fluentbit_backup_conf: true
 

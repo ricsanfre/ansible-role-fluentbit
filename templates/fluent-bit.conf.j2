@@ -29,13 +29,13 @@
     # Parsers File
     # ============
     # specify an optional 'Parsers' configuration file
-    parsers_file parsers.conf
-    parsers_file custom_parsers.conf
+    parsers_file {{ fluentbit_config_dir }}/parsers.conf
+    parsers_file {{ fluentbit_config_dir }}/custom_parsers.conf
 
     # Plugins File
     # ============
     # specify an optional 'Plugins' configuration file to load external plugins.
-    plugins_file plugins.conf
+    plugins_file {{ fluentbit_config_dir }}/plugins.conf
 
     # HTTP Server
     # ===========
