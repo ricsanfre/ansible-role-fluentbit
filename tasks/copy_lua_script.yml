@@ -8,7 +8,7 @@
 
 - name: copy lua script
   ansible.builtin.copy:
-    dest: "/etc/fluent-bit/{{ lua_script.name }}"
+    dest: "{{ fluentbit_config_dir }}/{{ lua_script.name }}"
     content: "{{ lua_script.content }}"
     mode: 0644
   notify: Restart Fluentbit service

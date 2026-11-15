@@ -22,6 +22,7 @@ You can find more information about each option in the Fluentbit [documentation]
 
 ### General configuration variables
 
+* **fluentbit_config_dir**: Directory holding the configuration, parser and plugin files [default: /etc/fluent-bit]
 * **fluentbit_service_flush_seconds**: Flush time in seconds [default: 5]
 * **fluentbit_service_enable_metrics**: Enable metrics HTTP server [default: false]
 * **fluentbit_service_log_level**: Set logging verbosity level [default: info]
